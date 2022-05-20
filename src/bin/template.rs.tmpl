@@ -1,0 +1,38 @@
+use aoc_helpers::{
+    anyhow,
+    scaffold::{solve, Problem, VecFromLines},
+};
+
+struct Day_N_;
+
+impl Problem for Day_N_ {
+    type Input = VecFromLines<usize>;
+    type Part1 = usize;
+    type Part2 = usize;
+
+    fn solve_part1(input: &<Self::Input as aoc_helpers::scaffold::Parse>::Parsed) -> Self::Part1 {
+        Default::default()
+    }
+
+    fn solve_part2(input: &<Self::Input as aoc_helpers::scaffold::Parse>::Parsed) -> Self::Part2 {
+        Default::default()
+    }
+}
+
+fn main() {
+    solve::<Day_N_>(include_str!("../../inputs/day_N_.txt"));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc_helpers::scaffold::{solve_part1, solve_part2};
+
+    const SAMPLE: &str = "";
+
+    #[test]
+    fn test_sample() {
+        assert_eq!(solve_part1::<Day_N_>(SAMPLE), <Day_N_ as Problem>::Part1::default());
+        assert_eq!(solve_part2::<Day_N_>(SAMPLE), <Day_N_ as Problem>::Part2::default());
+    }
+}
