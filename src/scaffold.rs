@@ -6,6 +6,14 @@ pub trait Parse {
     fn parse(raw_input: &str) -> Result<Self::Parsed>;
 }
 
+impl Parse for String {
+    type Parsed = Self;
+
+    fn parse(raw_input: &str) -> Result<Self::Parsed> {
+        Ok(raw_input.trim().to_owned())
+    }
+}
+
 pub struct VecFromLines<T> {
     _phantom: PhantomData<T>,
 }
