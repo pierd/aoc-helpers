@@ -15,6 +15,12 @@ pub trait Execute<S> {
     fn execute(&self, state: S) -> (S, Jump);
 }
 
+impl<S, E: Execute<S>> Execute<S> for Vec<E> {
+    fn execute(&self, state: S) -> (S, Jump) {
+        self.as_slice().execute(state)
+    }
+}
+
 impl<S, E: Execute<S>> Execute<S> for &[E] {
     fn execute(&self, mut state: S) -> (S, Jump) {
         let mut instr_idx = 0;
