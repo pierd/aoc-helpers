@@ -14,6 +14,21 @@ impl Parse for String {
     }
 }
 
+pub struct TrimAndParse<T> {
+    _phantom: PhantomData<T>,
+}
+
+impl<T: FromStr> Parse for TrimAndParse<T>
+where
+    T::Err: Display,
+{
+    type Parsed = T;
+
+    fn parse(raw_input: &str) -> Result<Self::Parsed> {
+        raw_input.trim().parse::<T>().map_err(|e| anyhow::anyhow!("Parsing failed: {}", e))
+    }
+}
+
 pub struct VecFromLines<T> {
     _phantom: PhantomData<T>,
 }
