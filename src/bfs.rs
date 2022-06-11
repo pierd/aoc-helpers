@@ -102,7 +102,11 @@ where
             }
         }
     }
-    BFSResult { final_state: None, final_cost: None, seen_states }
+    BFSResult {
+        final_state: None,
+        final_cost: None,
+        seen_states,
+    }
 }
 
 #[cfg(test)]

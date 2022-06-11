@@ -25,7 +25,10 @@ where
     type Parsed = T;
 
     fn parse(raw_input: &str) -> Result<Self::Parsed> {
-        raw_input.trim().parse::<T>().map_err(|e| anyhow::anyhow!("Parsing failed: {}", e))
+        raw_input
+            .trim()
+            .parse::<T>()
+            .map_err(|e| anyhow::anyhow!("Parsing failed: {}", e))
     }
 }
 
