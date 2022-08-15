@@ -36,16 +36,13 @@ pub struct VecFromLines<T> {
     _phantom: PhantomData<T>,
 }
 
-impl<T: FromStr> Parse for VecFromLines<T>
-where
-    T::Err: Display,
-{
-    type Parsed = Vec<T>;
+impl<T: Parse> Parse for VecFromLines<T> {
+    type Parsed = Vec<T::Parsed>;
     fn parse(raw_input: &str) -> Result<Self::Parsed> {
         raw_input
             .lines()
-            .map(|line| line.parse::<T>())
-            .collect::<Result<Vec<T>, _>>()
+            .map(|line| T::parse(line))
+            .collect::<Result<Vec<T::Parsed>, _>>()
             .map_err(|e| anyhow!("Parse failed: {}", e))
     }
 }
@@ -65,6 +62,22 @@ where
             .filter(|s| !s.is_empty())
             .map(|part| part.trim().parse::<T>())
             .collect::<Result<Vec<T>, _>>()
+            .map_err(|e| anyhow!("Parse failed: {}", e))
+    }
+}
+
+pub struct VecFromWhitespaceSeparated<T> {
+    _phantom: PhantomData<T>,
+}
+
+impl<T: Parse> Parse for VecFromWhitespaceSeparated<T> {
+    type Parsed = Vec<T::Parsed>;
+    fn parse(raw_input: &str) -> Result<Self::Parsed> {
+        raw_input
+            .split_ascii_whitespace()
+            .filter(|s| !s.is_empty())
+            .map(|part| T::parse(part.trim()))
+            .collect::<Result<Vec<T::Parsed>, _>>()
             .map_err(|e| anyhow!("Parse failed: {}", e))
     }
 }
