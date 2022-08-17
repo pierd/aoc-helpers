@@ -1,4 +1,4 @@
-use crate::parse::Parse;
+pub use crate::parse::Parse;
 
 pub trait Problem {
     type Input: Parse;
