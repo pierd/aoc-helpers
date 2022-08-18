@@ -9,6 +9,12 @@ impl<T: Copy> From<&Vec<Vec<T>>> for TileMap<T> {
     }
 }
 
+impl<T: Copy> From<Vec<Vec<T>>> for TileMap<T> {
+    fn from(map: Vec<Vec<T>>) -> Self {
+        Self { map }
+    }
+}
+
 impl<T: Copy> TileMap<T> {
     pub fn get(&self, row: isize, col: isize) -> Option<T> {
         if let (Ok(row), Ok(col)) = (usize::try_from(row), usize::try_from(col)) {
