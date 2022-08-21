@@ -1,6 +1,7 @@
 pub use anyhow;
 pub mod bfs;
 pub mod interpret;
+pub mod matrix;
 pub mod parse;
 pub mod permutations;
 pub mod prelude;
