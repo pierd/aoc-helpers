@@ -53,6 +53,20 @@ impl<T: Parse> Parse for VecFromLines<T> {
     }
 }
 
+pub struct VecFromMultiLines<T> {
+    _phantom: PhantomData<T>,
+}
+
+impl<T: Parse> Parse for VecFromMultiLines<T> {
+    type Parsed = Vec<T::Parsed>;
+    fn parse(raw_input: &str) -> Result<Self::Parsed> {
+        raw_input.split("\n\n")
+            .map(|multiple_lines| T::parse(multiple_lines.trim()))
+            .collect::<Result<Vec<T::Parsed>, _>>()
+            .map_err(|e| anyhow!("Parse failed: {}", e))
+    }
+}
+
 pub struct VecFromCommaSeparated<T> {
     _phantom: PhantomData<T>,
 }
@@ -116,6 +130,25 @@ mod tests {
         assert_eq!(isize::parse("42").unwrap(), 42);
         assert_eq!(isize::parse("-42").unwrap(), -42);
         assert_eq!(String::parse("foobar").unwrap(), "foobar".to_owned());
+    }
+
+    #[test]
+    fn test_vec_from_lines() {
+        assert_eq!(
+            VecFromLines::<usize>::parse("1\n2\n3").unwrap(),
+            vec![1, 2, 3]
+        );
+    }
+
+    #[test]
+    fn test_vec_from_multilines() {
+        assert_eq!(
+            VecFromMultiLines::<String>::parse("1\n2\n\nfoo\nbar").unwrap(),
+            vec![
+                "1\n2".to_owned(),
+                "foo\nbar".to_owned(),
+            ]
+        );
     }
 
     #[test]
