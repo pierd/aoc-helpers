@@ -1,5 +1,6 @@
 pub use anyhow;
 pub mod bfs;
+pub mod bitset;
 pub mod interpret;
 pub mod matrix;
 pub mod parse;
