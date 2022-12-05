@@ -60,7 +60,8 @@ pub struct VecFromMultiLines<T> {
 impl<T: Parse> Parse for VecFromMultiLines<T> {
     type Parsed = Vec<T::Parsed>;
     fn parse(raw_input: &str) -> Result<Self::Parsed> {
-        raw_input.split("\n\n")
+        raw_input
+            .split("\n\n")
             .map(|multiple_lines| T::parse(multiple_lines.trim()))
             .collect::<Result<Vec<T::Parsed>, _>>()
             .map_err(|e| anyhow!("Parse failed: {}", e))
@@ -120,6 +121,21 @@ where
     }
 }
 
+pub struct TwoSections<A, B> {
+    _phantom: PhantomData<(A, B)>,
+}
+
+impl<A: Parse, B: Parse> Parse for TwoSections<A, B> {
+    type Parsed = (A::Parsed, B::Parsed);
+    fn parse(raw_input: &str) -> Result<Self::Parsed> {
+        if let Some((first, second)) = raw_input.split_once("\n\n") {
+            Ok((A::parse(first)?, B::parse(second)?))
+        } else {
+            Err(anyhow!("Failed to find 2 sections"))
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -144,10 +160,7 @@ mod tests {
     fn test_vec_from_multilines() {
         assert_eq!(
             VecFromMultiLines::<String>::parse("1\n2\n\nfoo\nbar").unwrap(),
-            vec![
-                "1\n2".to_owned(),
-                "foo\nbar".to_owned(),
-            ]
+            vec!["1\n2".to_owned(), "foo\nbar".to_owned(),]
         );
     }
 
